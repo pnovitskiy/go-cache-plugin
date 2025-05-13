@@ -121,14 +121,7 @@ func initModProxy(env *command.Env, s3c *s3util.Client) (_ http.Handler, cleanup
 	}
 	cleanup = func() { vprintf("close cacher (err=%v)", cacher.Close()) }
 	proxy := &goproxy.Goproxy{
-		Fetcher: &goproxy.GoFetcher{
-			// As configured, the fetcher should never shell out to the go
-			// tool. Specifically, because we set GOPROXY and do not set any
-			// bypass via GONOPROXY, GOPRIVATE, etc., we will only attempt to
-			// proxy for the specific server(s) listed in Env.
-			GoBin: "/bin/false",
-			Env:   []string{"GOPROXY=https://proxy.golang.org"},
-		},
+		Fetcher:       &goproxy.GoFetcher{},
 		Cacher:        cacher,
 		ProxiedSumDBs: []string{"sum.golang.org"}, // default, see below
 	}
